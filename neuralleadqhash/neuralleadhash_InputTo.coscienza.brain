@@ -1,0 +1,1 @@
+{"BiasInitMax":0.5,"BiasInitMin":-0.5,"DropOut":0.0,"Grid":[32,1,1],"Model":"Gen","Name":"InputTo","Neurons":null,"Type":0,"UseBiases":false,"params":null}
