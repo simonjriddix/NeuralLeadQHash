@@ -99,6 +99,7 @@ void compress(uint32_t state[8], const uint8_t* block, uint32_t& quantum_mix, bo
 
 // Funzione hash principale DirectComputeHash migliorata e ottimizzata
 DLL_API_NLHASH ComputeStatus DirectComputeHash(const uint8_t* data, size_t length, uint8_t*& output);
+DLL_API_NLHASH ComputeStatus DirectComputeHashPointer(const uint8_t* data, size_t length, uint8_t* output);
 
 DLL_API_NLHASH void setMaximumCPUThreads(int maxThreads);
 DLL_API_NLHASH void setMaximumParallelNeuralNetworks(int maxParallelNueralLeadHashNeuralNetworks);
