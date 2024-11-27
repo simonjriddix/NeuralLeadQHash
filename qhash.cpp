@@ -247,3 +247,47 @@ DLL_API_NLHASH ComputeStatus DirectComputeHash(const uint8_t* data, size_t lengt
 
     return ComputeStatus::HASH_SUCCESS;
 }
+
+// Main hash function with output pointer
+DLL_API_NLHASH ComputeStatus DirectComputeHashPointer(const uint8_t* data, size_t length, uint8_t* hash_output)
+{
+    // Initial state
+    uint32_t state[8] = {
+        0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+        0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
+    };
+
+    // Pre-processing
+    size_t padded_length = ((length + 9 + 63) / 64) * 64;
+    std::vector<uint8_t> padded_data(padded_length, 0);
+    memcpy(padded_data.data(), data, length);
+    //padded_data[length -1] &= 0x80;
+
+    uint64_t bit_len = length * 8;
+    for (int i = 0; i < 8; ++i)
+    {
+        padded_data[padded_length - 1 - i] = static_cast<uint8_t>((bit_len >> (i * 8)) & 0xFF);
+    }
+
+    uint32_t quantum_mix = 0;
+
+    // Process each block
+    for (size_t i = 0; i < padded_length; i += 64)
+    {
+        bool useNL = ((padded_data[i] + length) % 5 == 0);
+        compress(state, &padded_data[i], quantum_mix, useNL);
+        mixBetweenBlocks(state);  // Additional mixing between blocks
+    }
+
+    // Produce final hash
+    for (int i = 0; i < 8; ++i)
+    {
+        int pos = i * 4;
+        hash_output[pos] = (state[i] >> 24) & 0xFF;
+        hash_output[pos + 1] = (state[i] >> 16) & 0xFF;
+        hash_output[pos + 2] = (state[i] >> 8) & 0xFF;
+        hash_output[pos + 3] = state[i] & 0xFF;
+    }
+
+    return ComputeStatus::HASH_SUCCESS;
+}
