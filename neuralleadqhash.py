@@ -8,8 +8,8 @@ class ComputeStatus(ctypes.c_int):
 
 # Path to library dll/so/dylib
 hash_lib = ctypes.CDLL("/path/to/libneuralleadqhash.so")
-hash_lib.DirectComputeHash.argtypes = [POINTER(c_uint8), c_size_t, POINTER(c_uint8)]
-hash_lib.DirectComputeHash.restype = ComputeStatus
+hash_lib.DirectComputeHashPointer.argtypes = [POINTER(c_uint8), c_size_t, POINTER(c_uint8)]
+hash_lib.DirectComputeHashPointer.restype = ComputeStatus
 
 
 def compute_hash(data):
@@ -19,7 +19,7 @@ def compute_hash(data):
     output_array = (c_uint8 * 32)()         # Array per l'output
 
     # Chiama la funzione
-    status = hash_lib.DirectComputeHash(data_array, length, output_array)
+    status = hash_lib.DirectComputeHashPointer(data_array, length, output_array)
 
     return (status, bytes(output_array))    # Restituisci l'output come array
 
